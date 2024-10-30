@@ -1,12 +1,14 @@
 # Etapa 1: Build do backend e geração do Prisma Client
-FROM node:18-alpine AS build
+FROM node:22-alpine AS build
 
 WORKDIR /app
 
 COPY package*.json ./
 RUN npm install
 
-# Copia a pasta prisma e gera o Prisma Client
+ENV DATABASE_URL=postgresql://admin:admin@db:5432/todolistdb?schema=public
+ENV JWT_SECRET=1Ov3CxfZ6JLhuHp2QSmz6MR6ma1Qmgb/jELpW6mFYNo=
+
 COPY prisma ./prisma
 RUN npx prisma generate
 
@@ -17,9 +19,13 @@ COPY . .
 RUN npm run build
 
 # Etapa 2: Imagem de produção
-FROM node:18-alpine
+FROM node:22-alpine
 
 WORKDIR /app
+
+# Define novamente a DATABASE_URL para a etapa de produção
+ENV DATABASE_URL=postgresql://admin:admin@db:5432/todolistdb?schema=public
+ENV JWT_SECRET=1Ov3CxfZ6JLhuHp2QSmz6MR6ma1Qmgb/jELpW6mFYNo=
 
 # Copia apenas as dependências de produção
 COPY package*.json ./

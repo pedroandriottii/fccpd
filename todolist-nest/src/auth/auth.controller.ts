@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get } from '@nestjs/common';
+import { Controller, Post, Body, Logger } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import SignupDto from './dto/signup.dto';
 import SigninDto from './dto/signin.dto';
@@ -9,11 +9,13 @@ export class AuthController {
 
   @Post('signup')
   create(@Body() createAuthDto: SignupDto) {
+    Logger.log('bati no signup');
     return this.authService.signup(createAuthDto);
   }
 
-  @Get('signin')
+  @Post('signin')
   signin(@Body() signinDto: SigninDto) {
+    Logger.log('bati no signin');
     return this.authService.signin(signinDto);
   }
 

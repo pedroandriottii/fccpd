@@ -10,6 +10,7 @@ import {
   Req,
   HttpCode,
   HttpStatus,
+  Logger,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -27,16 +28,19 @@ export class CategoryController {
     @Body() createCategoryDto: CreateCategoryDto,
     @Req() req: { userid: number },
   ) {
+    Logger.log('bati no create category');
     return await this.categoryService.create(createCategoryDto, req.userid);
   }
 
   @Get()
   async findAll(@Req() req: { userid: number }) {
+    Logger.log('bati no findall category');
     return await this.categoryService.findAll(req.userid);
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string, @Req() req: { userid: number }) {
+    Logger.log('bati no findone category');
     return await this.categoryService.findOne(+id, req.userid);
   }
 
@@ -46,6 +50,7 @@ export class CategoryController {
     @Body() updateCategoryDto: UpdateCategoryDto,
     @Req() req: { userid: number },
   ) {
+    Logger.log('bati no update category');
     return await this.categoryService.update(
       +id,
       updateCategoryDto,
@@ -56,6 +61,7 @@ export class CategoryController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async remove(@Param('id') id: string, @Req() req: { userid: number }) {
+    Logger.log('bati no remove category');
     return await this.categoryService.remove(+id, req.userid);
   }
 }

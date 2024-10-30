@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import SignupDto from './dto/signup.dto';
@@ -42,39 +43,45 @@ export class AuthService {
       if (error.code === 'P2002') {
         throw new ConflictException('Usuário já cadastrado');
       }
+      Logger.log(error);
       throw new InternalServerErrorException('Erro interno do servidor');
     }
   }
 
   async signin(signinDto: SigninDto) {
-    const { username, password }: SigninDto = signinDto;
+    try {
+      const { username, password }: SigninDto = signinDto;
 
-    const user = await this.prisma.user.findUnique({
-      where: { username },
-      select: {
-        id: true,
-        username: true,
-        password: true,
-      },
-    });
+      const user = await this.prisma.user.findUnique({
+        where: { username },
+        select: {
+          id: true,
+          username: true,
+          password: true,
+        },
+      });
 
-    if (!user) {
-      throw new NotFoundException('Usuário ou senha inválidos');
+      if (!user) {
+        throw new NotFoundException('Usuário ou senha inválidos');
+      }
+
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+
+      if (!isPasswordValid) {
+        throw new NotFoundException('Usuário ou senha inválidos');
+      }
+
+      const payload = { username: user.username, userid: user.id };
+
+      const token = await this.jwtService.signAsync(payload);
+
+      return {
+        login: true,
+        token: token,
+      };
+    } catch (error) {
+      Logger.log(error);
+      throw new InternalServerErrorException('Erro interno do servidor');
     }
-
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-
-    if (!isPasswordValid) {
-      throw new NotFoundException('Usuário ou senha inválidos');
-    }
-
-    const payload = { username: user.username, userid: user.id };
-
-    const token = await this.jwtService.signAsync(payload);
-
-    return {
-      login: true,
-      token: token,
-    };
   }
 }

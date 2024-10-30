@@ -11,7 +11,6 @@ import { Label } from "@/components/ui/label";
 import { SyntheticEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { apiUrl } from "@/config/apiconfig";
 
 export function LoginForm() {
   const { toast } = useToast()
@@ -22,7 +21,7 @@ export function LoginForm() {
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${apiUrl}/auth/signin`, {
+      const response = await fetch(`http://localhost:3000/auth/signin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
