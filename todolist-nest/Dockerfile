@@ -9,13 +9,10 @@ RUN npm install
 ENV DATABASE_URL=postgresql://admin:admin@db:5432/todolistdb?schema=public
 ENV JWT_SECRET=1Ov3CxfZ6JLhuHp2QSmz6MR6ma1Qmgb/jELpW6mFYNo=
 
-COPY prisma ./prisma
-RUN npx prisma generate
-
-# Copia o restante do código para compilar
 COPY . .
 
-# Compila o código do backend NestJS
+RUN npx prisma generate
+
 RUN npm run build
 
 # Etapa 2: Imagem de produção
