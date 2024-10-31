@@ -32,7 +32,7 @@ export default function ProtectedLayout() {
     <div className="flex flex-col min-h-screen">
       <header className="bg-primary text-primary-foreground p-4">
         <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold">TODOIST</h1>
+          <h1 className="text-2xl font-bold">TODOLIST</h1>
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
               <User className="h-5 w-5" />
